@@ -1,0 +1,27 @@
+{
+  "name": "gizmo-signalr-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeZA3D/gizmo-signalr-client.git"
+  },
+  "keywords": [
+    "gizmo",
+    "gizmopowered",
+    "signalr"
+  ],
+  "author": "KeZA3D",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KeZA3D/gizmo-signalr-client/issues"
+  },
+  "homepage": "https://github.com/KeZA3D/gizmo-signalr-client#readme",
+  "dependencies": {
+    "@microsoft/signalr": "^6.0.0"
+  }
+}
