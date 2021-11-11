@@ -13,7 +13,7 @@ Example of using SignalR in Gizmo
 ### NodeJS
 
 ```bash
-    npm install @microsoft/signalr
+npm install @microsoft/signalr
 ```
 
 ## Base Usage
@@ -21,18 +21,18 @@ Example of using SignalR in Gizmo
 Before connecting, make sure you have Web enabled.
 To connect, you need the Web port that you set in the `Gizmo Manager > Configuration > Web`
 
-````js
+```js
 const connection = new signalR.HubConnectionBuilder()
-                .configureLogging(signalR.LogLevel.Debug)
-                .withUrl("http://localhost:80/api/events", {
-                    skipNegotiation: true, //Set "true" if you have negotiation troubles
-                    transport: signalR.HttpTransportType.WebSockets
-                })
-                .build();
+  .configureLogging(signalR.LogLevel.Debug)
+  .withUrl("http://localhost:80/api/events", {
+    skipNegotiation: true, //Set "true" if you have negotiation troubles
+    transport: signalR.HttpTransportType.WebSockets,
+  })
+  .build();
 ```
 
-
 ## Arguments
+
 `--filename`
 Custom output filename: --filename=example.json
 
@@ -40,5 +40,6 @@ Custom output filename: --filename=example.json
 Custom folder: --foldername="C:\path\to"
 
 ## License
+
 Steam-config-finder is released under the [MIT License](https://github.com/KeZA3D/ggizmo-api/blob/main/LICENSE)
-````
+
