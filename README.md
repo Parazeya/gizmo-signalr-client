@@ -33,11 +33,11 @@ const connection = new signalR.HubConnectionBuilder()
 //Only "EntityEvent" is supported
 connection.on("EntityEvent", e => console.log(e))
 ```
-```
-EntityId - Row ID
-EntityType - Table Name
-EventType
-    0 - Create
-    1 - Delete
-    2 - Change
-```
+
+- EntityId - Row ID
+- EntityType - Table Name
+- EventType
+   * 0 - Create
+   * 1 - Delete
+   * 2 - Change
+
