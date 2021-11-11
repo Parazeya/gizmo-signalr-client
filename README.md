@@ -32,7 +32,7 @@ To connect, you need the Web port that you set in the `Gizmo Manager > Configura
     .build();
 
   await connection.start();
-  
+
   //Only "EntityEvent" is supported
   connection.on("EntityEvent", (e) => console.log(e));
 })();
@@ -43,4 +43,4 @@ To connect, you need the Web port that you set in the `Gizmo Manager > Configura
 - EventType
   - 0 - Create
   - 1 - Delete
-  - 2 - Change
+  - 2 - Modify
