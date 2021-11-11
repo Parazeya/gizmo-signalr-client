@@ -150,7 +150,7 @@
             });
 
             function onmessage(msg) {
-                // console.log(msg)
+                console.log(msg)
                 if (msg.Event.EntityType == "Setting" && window.eventHandlers.Setting == false) return;
                 switch (msg.Event.EventType) {
                     case 0:

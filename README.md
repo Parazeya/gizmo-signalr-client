@@ -29,17 +29,14 @@ const connection = new signalR.HubConnectionBuilder()
     transport: signalR.HttpTransportType.WebSockets,
   })
   .build();
+
+//Only "EntityEvent" is supported
+connection.on("EntityEvent", e => console.log(e))
 ```
 
-## Arguments
-
-`--filename`
-Custom output filename: --filename=example.json
-
-`--foldername`
-Custom folder: --foldername="C:\path\to"
-
-## License
-
-Steam-config-finder is released under the [MIT License](https://github.com/KeZA3D/ggizmo-api/blob/main/LICENSE)
-
+### EntityId - Row ID
+### EntityType - Table Name
+### EventType
+#### 0 - Create
+#### 1 - Delete
+#### 2 - Change
