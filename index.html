@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <head>
     <!-- Required meta tags -->
@@ -11,52 +11,79 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title>SignalR Example</title>
+    <style>
+        html,
+        body {
+            overflow-x: hidden;
+            /* Prevent scroll on narrow devices */
+        }
+
+        body {
+            padding-top: 56px;
+        }
+    </style>
 </head>
 
-<body class="h-100 text-center text-white bg-dark">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
-            <div>
-                <h3 class="float-md-start mb-0">Gizmo SignalR Example</h3>
-            </div>
-        </header>
+<body class="text-white bg-dark">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Gizmo SignalR Example</a>
+        </div>
+    </nav>
 
-        <main class="container-fluid">
-            <div class="alert alert-danger" id="signalr-connection-state" role="alert">
-                SignalR: not connected!
+    <main class="container">
+        <div class="alert alert-danger" id="signalr-connection-state" role="alert">
+            SignalR: not connected!
+        </div>
+        <div class="card mb-2">
+            <h5 class="card-header text-start bg-dark">Options</h5>
+            <form class="card-body text-start text-dark" name="event-handler-form">
+                <div class="row justify-content-between">
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="Setting-event" checked>
+                            <label class="form-check-label" for="Setting-event">
+                                Setting
+                            </label>
+                        </div>
+                        <!-- <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="table">
+                                <label class="form-check-label" for="table">
+                                    Default checkbox
+                                </label>
+                            </div> -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="divider"></div>
+        <div class="row justify-content-between mb-2">
+            <div class="col-lg-4">
+                <div class="card">
+                    <h5 class="card-header bg-dark">Create</h5>
+                    <div class="card-body text-start text-dark overflow-auto"
+                        style="min-height: 500px; max-height: 500px;" id="create-event-history">
+                    </div>
+                </div>
             </div>
-            <div class="row justify-content-between">
-                <div class="col-lg-4">
-                    <div class="card">
-                        <h5 class="card-header bg-dark">Create</h5>
-                        <div class="card-body text-start text-dark overflow-auto"
-                            style="min-height: 600px; max-height: 600px;" id="create-event-history">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <h5 class="card-header bg-dark">Change</h5>
-                        <div class="card-body text-start text-dark overflow-auto"
-                            style="min-height: 600px; max-height: 600px;" id="change-event-history">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <h5 class="card-header bg-dark ">Delete</h5>
-                        <div class="card-body text-start text-dark overflow-auto"
-                            style="min-height: 600px; max-height: 600px;" id="delete-event-history">
-                        </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <h5 class="card-header bg-dark">Change</h5>
+                    <div class="card-body text-start text-dark overflow-auto"
+                        style="min-height: 500px; max-height: 500px;" id="change-event-history">
                     </div>
                 </div>
             </div>
-        </main>
-
-        <footer class="mt-auto text-white-50">
-            <p>Powered by Alex <a href="https://github.com/KeZA3D" class="text-white">github</a>
-        </footer>
-    </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <h5 class="card-header bg-dark ">Delete</h5>
+                    <div class="card-body text-start text-dark overflow-auto"
+                        style="min-height: 500px; max-height: 500px;" id="delete-event-history">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -74,12 +101,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             //Global Variables
-            var a, b, c, d, e, i, o;
+            // var a, b, c, d, e, i, o;
+            
             var signalrState = 0;
             var signalrCreateCard = document.getElementById("create-event-history"),
                 signalrChangeCard = document.getElementById("change-event-history"),
                 signalrDeleteCard = document.getElementById("delete-event-history"),
                 signalrConnectionAlert = document.getElementById("signalr-connection-state");
+
+            window.eventHandlers = {
+                Setting: true
+            }
 
 
             //Gizmo SignalR support only one method
@@ -124,7 +156,8 @@
             });
 
             function onmessage(msg) {
-                console.log(msg)
+                // console.log(msg)
+                if (msg.Event.EntityType == "Setting" && window.eventHandlers.Setting == false) return;
                 switch (msg.Event.EventType) {
                     case 0:
                         signalrCreateCard.innerHTML = signalrCreateCard.innerHTML + toHTML(msg)
@@ -148,7 +181,11 @@
             function gotoBottom(element) {
                 element.scrollTop = element.scrollHeight - element.clientHeight;
             }
-
+            document.forms["event-handler-form"].addEventListener("change", function (event) {
+                if (event.target.id == "Setting-event") {
+                    window.eventHandlers.Setting = event.target.checked
+                }
+            });
             // Start the connection.
             start();
         });
