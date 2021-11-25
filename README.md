@@ -44,3 +44,4 @@ To connect, you need the Web port that you set in the `Gizmo Manager > Configura
   - 0 - Create
   - 1 - Delete
   - 2 - Modify
+
