@@ -3,23 +3,26 @@
 const signalR = require('@microsoft/signalr');
 
 //Gizmo SignalR support only one method
-const EVENT = "EntityEvent";
+const EVENT = "Event";
 
 //Change this
 const HOST = "localhost:8080";
+const OPERATOR = { login: "admin", password: "admin" }
+////////////////////////////////
+
 
 (async () => {
 
     const connection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Debug)
-        .withUrl("http://" + HOST + "/api/events", {
+        .withUrl(`http://${OPERATOR.login}:${OPERATOR.password}@${HOST}/api/events`, {
             skipNegotiation: true, //Set "true" if you have negotiation troubles
             transport: signalR.HttpTransportType.WebSockets,
         })
         .build();
     try {
         await connection.start();
-        //Only "EntityEvent" is supported
+        //Only "Event" is supported
         connection.on(EVENT, onmessage);
     } catch (err) {
         console.log(err);

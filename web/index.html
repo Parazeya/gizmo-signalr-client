@@ -112,10 +112,11 @@
 
             //Modify this
             const HOST = "localhost:80"
+            const OPERATOR = { login: "admin", password: "admin" }
 
             const connection = new signalR.HubConnectionBuilder()
                 .configureLogging(signalR.LogLevel.Debug)
-                .withUrl("http://" + HOST + "/api/events", {
+                .withUrl(`http://${OPERATOR.login}:${OPERATOR.password}@${HOST}/api/events`, {
                     skipNegotiation: true, //Set "true" if you have negotiation troubles
                     transport: signalR.HttpTransportType.WebSockets
                 })
