@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/KeZA3D/gizmo-signalr-client#readme",
   "dependencies": {
-    "@microsoft/signalr": "^6.0.0"
+    "@microsoft/signalr": "^6.0.0",
+    "@microsoft/signalr-protocol-msgpack": "^8.0.0"
   }
 }

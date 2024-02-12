@@ -26,7 +26,7 @@
 <body class="text-white bg-dark">
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Gizmo SignalR Example</a>
+            <a class="navbar-brand">Gizmo SignalR Example</a>
         </div>
     </nav>
 
@@ -94,8 +94,6 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             //Global Variables
-            // var a, b, c, d, e, i, o;
-
             var signalrState = 0;
             var signalrCreateCard = document.getElementById("create-event-history"),
                 signalrModifyCard = document.getElementById("modify-event-history"),
@@ -111,14 +109,24 @@
             const EVENT = "Event";
 
             //Modify this
-            const HOST = "localhost:80"
-            const OPERATOR = { login: "admin", password: "admin" }
+            const HOST = "localhost:81"
+            const OPERATOR = { login: encodeURIComponent("admin"), password: encodeURIComponent("admin") }
+            let accessToken = null;
 
             const connection = new signalR.HubConnectionBuilder()
                 .configureLogging(signalR.LogLevel.Debug)
-                .withUrl(`http://${OPERATOR.login}:${OPERATOR.password}@${HOST}/api/events`, {
+                .withUrl(`http://${HOST}/api/events`, {
                     skipNegotiation: true, //Set "true" if you have negotiation troubles
-                    transport: signalR.HttpTransportType.WebSockets
+                    transport: signalR.HttpTransportType.WebSockets,
+                    accessTokenFactory: async () => { // getting access token
+                        if (accessToken !== null) {
+                            return accessToken;
+                        }
+                        await fetch(`http://${HOST}/auth/token?username=${OPERATOR.login}&password=${OPERATOR.password}`).then(e => e.json().then(v => {
+                            accessToken = v.token
+                        })).catch(e => console.log(e))
+                        return accessToken;
+                    }
                 })
                 .build();
 

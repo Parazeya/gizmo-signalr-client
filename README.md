@@ -18,30 +18,36 @@ npm install @microsoft/signalr
 
 ## Base Usage
 
-Before connecting, make sure you have Web enabled.
-To connect, you need the Web port that you set in the `Gizmo Manager > Configuration > Web`
+Before connecting, make sure you have Web enabled. To connect, you need the Web port that you set in the `Gizmo Manager > Configuration > Web`
 
-```js
-(async () => {
-  const connection = new signalR.HubConnectionBuilder()
-    .configureLogging(signalR.LogLevel.Debug)
-    .withUrl("http://localhost:80/api/events", {
-      skipNegotiation: true, //Set "true" if you have negotiation troubles
-      transport: signalR.HttpTransportType.WebSockets,
-    })
-    .build();
+```javascript
+//Modify this
+const HOST = "localhost:81"
+const OPERATOR = { login: encodeURIComponent("admin"), password: encodeURIComponent("admin") }
+let accessToken = null;
 
-  await connection.start();
-
-  //Only "EntityEvent" is supported
-  connection.on("EntityEvent", (e) => console.log(e));
-})();
+const connection = new signalR.HubConnectionBuilder()
+.configureLogging(signalR.LogLevel.Debug)
+.withUrl(`http://${HOST}/api/events`, {
+    skipNegotiation: true, //Set "true" if you have negotiation troubles
+    transport: signalR.HttpTransportType.WebSockets,
+    accessTokenFactory: async () => { // getting access token
+        if (accessToken !== null) {
+            return accessToken;
+        }
+        await fetch(`http://${HOST}/auth/token?username=${OPERATOR.login}&password=${OPERATOR.password}`).then(e => e.json().then(v => {
+            accessToken = v.token
+        })).catch(e => console.log(e))
+        return accessToken;
+    }
+})
+.build();
 ```
 
 - EntityId - Row ID
 - EntityType - Table Name
 - EventType
+
   - 0 - Create
   - 1 - Delete
   - 2 - Modify
-

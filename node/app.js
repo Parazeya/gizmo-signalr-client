@@ -1,13 +1,13 @@
 'use strict';
 
 const signalR = require('@microsoft/signalr');
-
-//Gizmo SignalR support only one method
+//Gizmo SignalR support only one method - Event
 const EVENT = "Event";
 
 //Change this
-const HOST = "localhost:8080";
-const OPERATOR = { login: "admin", password: "admin" }
+const HOST = "localhost:80";
+const OPERATOR = { login: "admin", password: "admin" };
+let accessToken = null;
 ////////////////////////////////
 
 
@@ -15,14 +15,23 @@ const OPERATOR = { login: "admin", password: "admin" }
 
     const connection = new signalR.HubConnectionBuilder()
         .configureLogging(signalR.LogLevel.Debug)
-        .withUrl(`http://${OPERATOR.login}:${OPERATOR.password}@${HOST}/api/events`, {
+        .withUrl(`http://${HOST}/api/events`, {
             skipNegotiation: true, //Set "true" if you have negotiation troubles
             transport: signalR.HttpTransportType.WebSockets,
+            accessTokenFactory: async () => { // getting access token
+                if (accessToken !== null) {
+                    return accessToken;
+                }
+                await fetch(`http://${HOST}/auth/token?username=${OPERATOR.login}&password=${OPERATOR.password}`).then(e => e.json().then(v => {
+                    accessToken = v.token
+                })).catch(e => console.log("ERR", e))
+                return accessToken;
+            }
         })
+        .withAutomaticReconnect([1000, 3000, 6000, 12000, 16000])
         .build();
     try {
         await connection.start();
-        //Only "Event" is supported
         connection.on(EVENT, onmessage);
     } catch (err) {
         console.log(err);
