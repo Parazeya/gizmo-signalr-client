@@ -22,7 +22,7 @@ Before connecting, make sure you have Web enabled. To connect, you need the Web 
 
 ```javascript
 //Modify this
-const HOST = "localhost:81"
+const HOST = "localhost:80"
 const OPERATOR = { login: encodeURIComponent("admin"), password: encodeURIComponent("admin") }
 let accessToken = null;
 
